@@ -64,7 +64,17 @@ class Sensor {
             let rayEnd = ray[1];
 
             if (this.readings[index]) {
-                rayEnd = this.readings[index];
+                let sensorPoint = this.readings[index]
+                rayEnd = sensorPoint;
+
+                ctx.save();
+
+                ctx.beginPath();
+                ctx.fillStyle = "rgba(255, 0, 0, 0.5)";
+                ctx.arc(sensorPoint.x, sensorPoint.y, 3, 0, Math.PI*2);
+                ctx.fill();
+
+                ctx.restore();
             }
 
             // Draw the Sensor line until rayEnd or ReadingEnd

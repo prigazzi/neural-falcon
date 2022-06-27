@@ -73,6 +73,8 @@ class Car {
     }
 
     draw(ctx) {
+        this.sensor.draw(ctx);
+
         ctx.save();
         ctx.translate(this.x, this.y);
         ctx.rotate(-this.angle);
@@ -84,8 +86,6 @@ class Car {
             this.height
         );
         ctx.fill();
-
         ctx.restore();
-        this.sensor.draw(ctx);
     }
 }

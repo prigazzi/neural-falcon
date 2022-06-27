@@ -13,6 +13,7 @@ class Car {
         this.angle = 0;
 
         this.controls = new Controls();
+        this.sensor = new Sensor(this);
     }
 
     updateSpeed() {
@@ -65,9 +66,10 @@ class Car {
         }
     }
 
-    update() {
+    update(roadBorders) {
         this.updateSpeed();
         this.updateDirection();
+        this.sensor.update(roadBorders);
     }
 
     draw(ctx) {
@@ -84,5 +86,6 @@ class Car {
         ctx.fill();
 
         ctx.restore();
+        this.sensor.draw(ctx);
     }
 }

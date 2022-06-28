@@ -14,6 +14,8 @@ class Car {
 
         this.controls = new Controls();
         this.sensor = new Sensor(this);
+        this.img = new Image();
+        this.img.src = "img/mf.png";
     }
 
     updateSpeed() {
@@ -78,13 +80,29 @@ class Car {
         ctx.save();
         ctx.translate(this.x, this.y);
         ctx.rotate(-this.angle);
-        ctx.beginPath();
-        ctx.rect(
-            - this.width / 2,
-            - this.height / 2,
+
+        ctx.shadowColor = "#888";
+        ctx.shadowBlur = 10;
+        ctx.shadowOffsetX = 10;
+        ctx.shadowOffsetY = 10;
+        ctx.drawImage(
+            this.img,
+            -this.width/2,
+            -this.height/2,
             this.width,
             this.height
         );
+
+        ctx.restore();
+        // Code to draw the square
+        // ctx.beginPath();
+        // ctx.rect(
+        //     - this.width / 2,
+        //     - this.height / 2,
+        //     this.width,
+        //     this.height
+        // );
+
         ctx.fill();
         ctx.restore();
     }

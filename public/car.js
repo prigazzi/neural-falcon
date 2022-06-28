@@ -74,8 +74,10 @@ class Car {
         this.sensor.update(roadBorders);
     }
 
-    draw(ctx) {
-        this.sensor.draw(ctx);
+    draw(ctx, drawSensors) {
+        if (drawSensors) {
+            this.sensor.draw(ctx);
+        }
 
         ctx.save();
         ctx.translate(this.x, this.y);
@@ -94,14 +96,6 @@ class Car {
         );
 
         ctx.restore();
-        // Code to draw the square
-        // ctx.beginPath();
-        // ctx.rect(
-        //     - this.width / 2,
-        //     - this.height / 2,
-        //     this.width,
-        //     this.height
-        // );
 
         ctx.fill();
         ctx.restore();

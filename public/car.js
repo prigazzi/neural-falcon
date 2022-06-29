@@ -18,7 +18,7 @@ class Car {
         this.img.src = "img/mf.png";
     }
 
-    updateSpeed() {
+    #move() {
         if (this.controls.forward) {
             this.speed += this.acceleration;
         }
@@ -49,12 +49,6 @@ class Car {
             this.speed = 0;
         }
 
-        this.x -= Math.sin(this.angle)*this.speed;
-        this.y -= Math.cos(this.angle)*this.speed;
-    }
-
-    updateDirection()
-    {
         if (this.speed != 0) {
             const flip = Math.sign(this.speed);
 
@@ -66,15 +60,18 @@ class Car {
                 this.angle -= 0.03 * flip;
             }
         }
+
+        this.x -= Math.sin(this.angle)*this.speed;
+        this.y -= Math.cos(this.angle)*this.speed;
     }
 
     update(roadBorders) {
-        this.updateSpeed();
-        this.updateDirection();
+        this.#move();
+        this.polygon = this.#createPolygon();
         this.sensor.update(roadBorders);
     }
 
-    draw(ctx, drawSensors) {
+    draw(ctx, drawSensors = true, drawHitbox = false) {
         if (drawSensors) {
             this.sensor.draw(ctx);
         }
@@ -97,7 +94,50 @@ class Car {
 
         ctx.restore();
 
-        ctx.fill();
-        ctx.restore();
+        if (drawHitbox) {
+            ctx.beginPath();
+            ctx.moveTo(this.polygon[0].x, this.polygon[0].y);
+
+            for (let i=1; i < this.polygon.length; i++) {
+                ctx.lineTo(this.polygon[i].x, this.polygon[i].y);
+            }
+            ctx.lineTo(this.polygon[0].x,this.polygon[0].y);
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = "blue";
+            ctx.stroke();
+        }
+    }
+
+    #createPolygon() {
+        const points = [];
+        const rad = Math.hypot(this.width, this.height)/2;
+        const alpha = Math.atan2(this.width, this.height);
+
+        points.push({
+            x: this.x-Math.sin(this.angle-(alpha*0.2))*(rad*0.8),
+            y: this.y-Math.cos(this.angle-(alpha*0.2))*(rad*0.8),
+        });
+        points.push({
+            x: this.x-Math.sin(this.angle+(alpha*0.2))*(rad*0.8),
+            y: this.y-Math.cos(this.angle+(alpha*0.2))*(rad*0.8),
+        });
+        points.push({
+            x: this.x-Math.sin(Math.PI/2+this.angle)*(rad*0.6),
+            y: this.y-Math.cos(Math.PI/2+this.angle)*(rad*0.6),
+        });
+        points.push({
+            x: this.x-Math.sin(Math.PI+this.angle-(alpha*0.85))*(rad*0.9),
+            y: this.y-Math.cos(Math.PI+this.angle-(alpha*0.85))*(rad*0.9),
+        });
+        points.push({
+            x: this.x-Math.sin(Math.PI+this.angle+(alpha*0.85))*(rad*0.9),
+            y: this.y-Math.cos(Math.PI+this.angle+(alpha*0.85))*(rad*0.9),
+        });
+        points.push({
+            x: this.x-Math.sin(3*Math.PI/2+this.angle)*(rad*0.6),
+            y: this.y-Math.cos(3*Math.PI/2+this.angle)*(rad*0.6),
+        });
+
+        return points;
     }
 }

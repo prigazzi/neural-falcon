@@ -9,13 +9,20 @@ class Car {
         this.acceleration = 0.2;
         this.maxSpeed = 10;
         this.friction = 0.05;
-
         this.angle = 0;
+        this.damaged = false;
 
         this.controls = new Controls();
         this.sensor = new Sensor(this);
+
         this.img = new Image();
         this.img.src = "img/mf.png";
+    }
+
+    reset() {
+        this.angle = 0;
+
+        this.x += 10 * Math.sign(this.x) * -1;
     }
 
     #move() {
@@ -66,9 +73,24 @@ class Car {
     }
 
     update(roadBorders) {
+        if (this.damaged) {
+            return;
+        }
+
         this.#move();
         this.polygon = this.#createPolygon();
+        this.damaged = this.#assessDamage(roadBorders);
         this.sensor.update(roadBorders);
+    }
+
+    #assessDamage(roadBorders) {
+        for (let i = 0; i < roadBorders.length; i++) {
+            if (polysIntersect(this.polygon, roadBorders[i])) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     draw(ctx, drawSensors = true, drawHitbox = false) {
@@ -94,18 +116,24 @@ class Car {
 
         ctx.restore();
 
-        if (drawHitbox) {
-            ctx.beginPath();
-            ctx.moveTo(this.polygon[0].x, this.polygon[0].y);
+        if (!drawHitbox) return;
 
-            for (let i=1; i < this.polygon.length; i++) {
-                ctx.lineTo(this.polygon[i].x, this.polygon[i].y);
-            }
-            ctx.lineTo(this.polygon[0].x,this.polygon[0].y);
-            ctx.lineWidth = 1;
+        if (this.damaged) {
+            ctx.strokeStyle = "red";
+        } else {
             ctx.strokeStyle = "blue";
-            ctx.stroke();
         }
+
+        ctx.beginPath();
+        ctx.moveTo(this.polygon[0].x, this.polygon[0].y);
+
+        for (let i=1; i < this.polygon.length; i++) {
+            ctx.lineTo(this.polygon[i].x, this.polygon[i].y);
+        }
+        ctx.lineTo(this.polygon[0].x,this.polygon[0].y);
+        ctx.lineWidth = 1;
+
+        ctx.stroke();
     }
 
     #createPolygon() {

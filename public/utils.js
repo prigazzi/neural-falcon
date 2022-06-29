@@ -2,7 +2,7 @@ function lerp (A, B, t) {
     return A + (B - A) * t;
 }
 
-function getIntersectionbetween(S1, S2) {
+function getIntersectionBetween(S1, S2) {
     let A = S1[0], B = S1[1], C = S2[0], D = S2[1];
     const tTop = (D.x-C.x)*(A.y-C.y)-(D.y-C.y)*(A.x-C.x);
     const uTop = (C.y-A.y)*(A.x-B.x)-(C.x-A.x)*(A.y-B.y);
@@ -20,4 +20,21 @@ function getIntersectionbetween(S1, S2) {
             }
         }
     }
+}
+
+function polysIntersect(A, B) {
+    for (let i = 0; i < A.length; i++) {
+        for (let j = 0; j < B.length; j++) {
+            const touch = getIntersectionBetween(
+                [A[i], A[(i+1) % A.length]],
+                [B[j], B[(j+1) % B.length]]
+            );
+
+            if(touch) {
+                return true;
+            }
+        }
+    }
+
+    return false;
 }

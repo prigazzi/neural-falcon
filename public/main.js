@@ -4,7 +4,7 @@ const params = new Proxy(new URLSearchParams(window.location.search), {
 console.log(params);
 
 const canvas = document.querySelector("#myCanvas");
-canvas.width = 200;
+canvas.width = 300;
 canvas.focus();
 
 const ctx = canvas.getContext('2d');

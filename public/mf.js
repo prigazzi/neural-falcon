@@ -1,7 +1,7 @@
 class MillenniumFalcon extends Car {
     constructor(x, y, imgRotation = 0) {
         super(x, y, 80, 108, "KEYS", "img/mf.png", imgRotation)
-        this.maxSpeed = 10;
+        this.maxSpeed = 7;
     }
 
     createPolygon() {

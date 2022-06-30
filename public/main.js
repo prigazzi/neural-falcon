@@ -9,7 +9,10 @@ canvas.focus();
 
 const ctx = canvas.getContext('2d');
 const road = new Road(canvas.width / 2, canvas.width * 0.9);
-const car = new Car(road.getLaneCenter(1), 100, 80, 108);
+const car = new TieFighter(road.getLaneCenter(2), 100, 180);
+const traffic = [
+
+];
 
 animate();
 

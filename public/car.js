@@ -1,5 +1,5 @@
 class Car {
-    constructor(x, y, width, height) {
+    constructor(x, y, width, height, img = null, rotate = 0) {
         this.x = x;
         this.y = y;
         this.width = width;
@@ -15,14 +15,11 @@ class Car {
         this.controls = new Controls();
         this.sensor = new Sensor(this);
 
-        this.img = new Image();
-        this.img.src = "img/mf.png";
-    }
-
-    reset() {
-        this.angle = 0;
-
-        this.x += 10 * Math.sign(this.x) * -1;
+        if (img) {
+            this.img = new Image();
+            this.img.src = img;
+            this.img.rotation = rotate;
+        }
     }
 
     #move() {
@@ -78,7 +75,7 @@ class Car {
         }
 
         this.#move();
-        this.polygon = this.#createPolygon();
+        this.polygon = this.createPolygon();
         this.damaged = this.#assessDamage(roadBorders);
         this.sensor.update(roadBorders);
     }
@@ -98,32 +95,61 @@ class Car {
             this.sensor.draw(ctx);
         }
 
-        ctx.save();
-        ctx.translate(this.x, this.y);
-        ctx.rotate(-this.angle);
+        this.drawImage(ctx);
+        this.drawPolygon(ctx);
 
-        ctx.shadowColor = "#888";
-        ctx.shadowBlur = 10;
-        ctx.shadowOffsetX = 10;
-        ctx.shadowOffsetY = 10;
-        ctx.drawImage(
-            this.img,
-            -this.width/2,
-            -this.height/2,
-            this.width,
-            this.height
-        );
+        if (drawHitbox) {
+            this.drawHitBox(ctx);
+        }
+    }
 
-        ctx.restore();
+    drawImage(ctx) {
+        if (this.img) {
+            ctx.save();
+            ctx.translate(this.x, this.y);
+            ctx.rotate(-this.angle + (this.img.rotation*Math.PI/180));
 
-        if (!drawHitbox) return;
+            ctx.shadowColor = "#888";
+            ctx.shadowBlur = 10;
+            ctx.shadowOffsetX = 10;
+            ctx.shadowOffsetY = 10;
+            ctx.drawImage(
+                this.img,
+                -this.width/2,
+                -this.height/2,
+                this.width,
+                this.height
+            );
 
+            ctx.restore();
+        }
+    }
+
+    drawPolygon(ctx) {
+        if (!this.img) {
+            this.#polygonContext(ctx);
+            ctx.fill();
+        }
+    }
+
+    drawHitBox(ctx) {
         if (this.damaged) {
             ctx.strokeStyle = "red";
         } else {
             ctx.strokeStyle = "blue";
         }
+        ctx.lineWidth = 1;
 
+        // If there's an image defined, we need to set the
+        // polygon into the context becase drawPolygon didn't
+        // call this yet.
+        if (this.img) {
+            this.#polygonContext(ctx);
+        }
+        ctx.stroke();
+    }
+
+    #polygonContext(ctx) {
         ctx.beginPath();
         ctx.moveTo(this.polygon[0].x, this.polygon[0].y);
 
@@ -131,39 +157,28 @@ class Car {
             ctx.lineTo(this.polygon[i].x, this.polygon[i].y);
         }
         ctx.lineTo(this.polygon[0].x,this.polygon[0].y);
-        ctx.lineWidth = 1;
-
-        ctx.stroke();
     }
 
-    #createPolygon() {
+    createPolygon() {
         const points = [];
         const rad = Math.hypot(this.width, this.height)/2;
         const alpha = Math.atan2(this.width, this.height);
 
         points.push({
-            x: this.x-Math.sin(this.angle-(alpha*0.2))*(rad*0.8),
-            y: this.y-Math.cos(this.angle-(alpha*0.2))*(rad*0.8),
+            x: this.x-Math.sin(this.angle-(alpha))*(rad),
+            y: this.y-Math.cos(this.angle-(alpha))*(rad),
         });
         points.push({
-            x: this.x-Math.sin(this.angle+(alpha*0.2))*(rad*0.8),
-            y: this.y-Math.cos(this.angle+(alpha*0.2))*(rad*0.8),
+            x: this.x-Math.sin(this.angle+(alpha))*(rad),
+            y: this.y-Math.cos(this.angle+(alpha))*(rad),
         });
         points.push({
-            x: this.x-Math.sin(Math.PI/2+this.angle)*(rad*0.6),
-            y: this.y-Math.cos(Math.PI/2+this.angle)*(rad*0.6),
+            x: this.x-Math.sin(Math.PI+this.angle-(alpha))*(rad),
+            y: this.y-Math.cos(Math.PI+this.angle-(alpha))*(rad),
         });
         points.push({
-            x: this.x-Math.sin(Math.PI+this.angle-(alpha*0.85))*(rad*0.9),
-            y: this.y-Math.cos(Math.PI+this.angle-(alpha*0.85))*(rad*0.9),
-        });
-        points.push({
-            x: this.x-Math.sin(Math.PI+this.angle+(alpha*0.85))*(rad*0.9),
-            y: this.y-Math.cos(Math.PI+this.angle+(alpha*0.85))*(rad*0.9),
-        });
-        points.push({
-            x: this.x-Math.sin(3*Math.PI/2+this.angle)*(rad*0.6),
-            y: this.y-Math.cos(3*Math.PI/2+this.angle)*(rad*0.6),
+            x: this.x-Math.sin(Math.PI+this.angle+(alpha))*(rad),
+            y: this.y-Math.cos(Math.PI+this.angle+(alpha))*(rad),
         });
 
         return points;

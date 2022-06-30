@@ -1,7 +1,6 @@
 const params = new Proxy(new URLSearchParams(window.location.search), {
     get: (searchParams, prop) => searchParams.get(prop),
 });
-console.log(params);
 
 const canvas = document.querySelector("#myCanvas");
 canvas.width = 300;
@@ -9,7 +8,9 @@ canvas.focus();
 
 const ctx = canvas.getContext('2d');
 const road = new Road(canvas.width / 2, canvas.width * 0.9);
-const car = new TieFighter(road.getLaneCenter(2), 100, 180);
+const car = params.empire == null ?
+    new MillenniumFalcon(road.getLaneCenter(2), 100) :
+    new TieFighter(road.getLaneCenter(2), 100, 180);
 const traffic = [
 
 ];

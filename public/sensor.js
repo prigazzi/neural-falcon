@@ -1,7 +1,7 @@
 class Sensor {
     constructor(car) {
         this.car = car;
-        this.rayCount = 5;
+        this.rayCount = 15;
         this.rayLength = 200;
         this.raySpread = Math.PI/2; // 45 degrees in radians
 
@@ -9,24 +9,43 @@ class Sensor {
         this.readings = [];
     }
 
-    update(roadBorders) {
+    update(roadBorders, traffic) {
         this.#castRays();
 
         this.readings = [];
         this.rays.forEach(ray => {
             this.readings.push(
-                this.#getReading(ray, roadBorders)
+                this.#getReading(
+                    ray,
+                    roadBorders,
+                    traffic
+                )
             );
         });
     }
 
-    #getReading(ray, roadBorders) {
+    #getReading(ray, roadBorders, traffic) {
         let touches = [];
         roadBorders.forEach(border => {
             const touch = getIntersectionBetween(ray, border);
 
             if (touch) {
                 touches.push(touch);
+            }
+        });
+
+        traffic.forEach(car => {
+            const polygon = car.polygon;
+
+            for (let i = 0; i < polygon.length; i++) {
+                const touch = getIntersectionBetween(
+                    ray,
+                    [polygon[i], polygon[(i+1) % polygon.length]]
+                )
+
+                if (touch) {
+                    touches.push(touch);
+                }
             }
         });
 

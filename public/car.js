@@ -1,5 +1,5 @@
 class Car {
-    constructor(x, y, width, height, img = null, rotate = 0) {
+    constructor(x, y, width, height, controlType = "DUMMY", img = null, imgRotation = 0) {
         this.x = x;
         this.y = y;
         this.width = width;
@@ -12,13 +12,16 @@ class Car {
         this.angle = 0;
         this.damaged = false;
 
-        this.controls = new Controls();
-        this.sensor = new Sensor(this);
+        this.controls = new Controls(controlType);
+
+        if (controlType != "DUMMY") {
+            this.sensor = new Sensor(this);
+        }
 
         if (img) {
             this.img = new Image();
             this.img.src = img;
-            this.img.rotation = rotate;
+            this.img.rotation = imgRotation;
         }
     }
 
@@ -69,20 +72,30 @@ class Car {
         this.y -= Math.cos(this.angle)*this.speed;
     }
 
-    update(roadBorders) {
+    update(roadBorders, traffic = []) {
         if (this.damaged) {
             return;
         }
 
         this.#move();
         this.polygon = this.createPolygon();
-        this.damaged = this.#assessDamage(roadBorders);
-        this.sensor.update(roadBorders);
+        this.damaged = this.#assessDamage(roadBorders, traffic);
+
+        if (this.sensor) {
+            this.sensor.update(roadBorders, traffic);
+        }
+
     }
 
-    #assessDamage(roadBorders) {
+    #assessDamage(roadBorders, traffic) {
         for (let i = 0; i < roadBorders.length; i++) {
             if (polysIntersect(this.polygon, roadBorders[i])) {
+                return true;
+            }
+        }
+
+        for (let i = 0; i < traffic.length; i++) {
+            if (polysIntersect(this.polygon, traffic[i].polygon)) {
                 return true;
             }
         }
@@ -92,7 +105,7 @@ class Car {
 
     draw(ctx, drawSensors = true, drawHitbox = false) {
         if (drawSensors) {
-            this.sensor.draw(ctx);
+            if (this.sensor) this.sensor.draw(ctx);
         }
 
         this.drawImage(ctx);

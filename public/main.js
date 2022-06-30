@@ -2,14 +2,17 @@ const params = new Proxy(new URLSearchParams(window.location.search), {
     get: (searchParams, prop) => searchParams.get(prop),
 });
 
-const canvas = document.querySelector("#myCanvas");
-canvas.width = 300;
-canvas.focus();
+const carCanvas = document.querySelector("#myCanvas");
+carCanvas.width = 300;
+const carCtx = carCanvas.getContext('2d');
 
-const ctx = canvas.getContext('2d');
-const road = new Road(canvas.width / 2, canvas.width * 0.9);
+const netCanvas = document.querySelector("#network");
+netCanvas.width = 400;
+const netCtx = netCanvas.getContext('2d');
+
+const road = new Road(carCanvas.width / 2, carCanvas.width * 0.9);
 const car = params.empire == null ?
-    new MillenniumFalcon(road.getLaneCenter(2), 100) :
+    new MillenniumFalcon(road.getLaneCenter(2), 100, "AI") :
     new TieFighter(road.getLaneCenter(2), 100, "KEYS", 180);
 const traffic = [
     new TieFighter(road.getLaneCenter(2), -100, null, 180)
@@ -18,26 +21,28 @@ const traffic = [
 animate();
 
 function animate() {
-    canvas.height = window.innerHeight;
+    carCanvas.height = window.innerHeight;
+    netCanvas.height = window.innerHeight;
 
     for (let i = 0; i < traffic.length; i++) {
         traffic[i].update(road.borders);
     }
     car.update(road.borders, traffic);
 
-    ctx.save();
-    ctx.translate(0, -car.y + canvas.height * 0.8);
+    carCtx.save();
+    carCtx.translate(0, -car.y + carCanvas.height * 0.8);
 
-    road.draw(ctx);
+    road.draw(carCtx);
     for (let i = 0; i < traffic.length; i++) {
-        traffic[i].draw(ctx, false, params.hitbox != null);
+        traffic[i].draw(carCtx, false, params.hitbox != null);
     }
     car.draw(
-        ctx,
+        carCtx,
         params.damito == null && params.noSensors == null, // drawSensors
         params.hitbox != null // drawHitbox
         );
 
-    ctx.restore();
+    carCtx.restore();
+    //Visualizer.drawNetwork(netCtx, car.brain);
     requestAnimationFrame(animate);
 }

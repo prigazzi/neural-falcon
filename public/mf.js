@@ -1,6 +1,6 @@
 class MillenniumFalcon extends Car {
-    constructor(x, y, imgRotation = 0) {
-        super(x, y, 80, 108, "KEYS", "img/mf.png", imgRotation)
+    constructor(x, y, controlType = "KEYS", imgRotation = 0) {
+        super(x, y, 80, 108, controlType, "img/mf.png", imgRotation)
         this.maxSpeed = 7;
     }
 

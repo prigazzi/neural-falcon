@@ -141,10 +141,10 @@ class Car {
             ctx.translate(this.x, this.y);
             ctx.rotate(-this.angle + (this.img.rotation*Math.PI/180));
 
-            ctx.shadowColor = "#888";
-            ctx.shadowBlur = 10;
-            ctx.shadowOffsetX = 10;
-            ctx.shadowOffsetY = 10;
+            //ctx.shadowColor = "#888";
+            //ctx.shadowBlur = 10;
+            //ctx.shadowOffsetX = 10;
+            //ctx.shadowOffsetY = 10;
             ctx.drawImage(
                 this.img,
                 -this.width/2,

@@ -12,7 +12,7 @@ const netCtx = netCanvas.getContext('2d');
 
 const road = new Road(carCanvas.width / 2, carCanvas.width * 0.9);
 const car = params.empire == null ?
-    new MillenniumFalcon(road.getLaneCenter(2), 100, "KEYS") :
+    new MillenniumFalcon(road.getLaneCenter(2), 100, "AI") :
     new TieFighter(road.getLaneCenter(2), 100, "KEYS", 180);
 const traffic = [
     new TieFighter(road.getLaneCenter(2), -100, null, 180)
@@ -20,7 +20,7 @@ const traffic = [
 
 animate();
 
-function animate() {
+function animate(time) {
     carCanvas.height = window.innerHeight;
     netCanvas.height = window.innerHeight;
 
@@ -43,6 +43,8 @@ function animate() {
         );
 
     carCtx.restore();
+
+    netCtx.lineDashOffset = -time/120;
     Visualizer.drawNetwork(netCtx, car.brain);
     requestAnimationFrame(animate);
 }

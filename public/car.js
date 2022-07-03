@@ -17,7 +17,7 @@ class Car {
         if (controlType != "DUMMY") {
             this.sensor = new Sensor(this);
             this.brain = new NeuralNetwork(
-                [this.sensor.rayCount, 8, 4]
+                [this.sensor.rayCount, 15, 4]
             );
         }
 
@@ -92,9 +92,8 @@ class Car {
                 s => s == null ? 0 : 1 - s.offset
             );
 
-            const outputs = NeuralNetwork.feedForward(offsets, this.brain);
-
             if (this.useBrain) {
+                const outputs = NeuralNetwork.feedForward(offsets, this.brain);
                 [
                     this.controls.forward,
                     this.controls.left,
@@ -103,7 +102,6 @@ class Car {
                 ] = outputs;
             }
         }
-
     }
 
     #assessDamage(roadBorders, traffic) {

@@ -4,3 +4,10 @@ class TieFighter extends Car {
         this.maxSpeed = 5;
     }
 }
+
+class GoodTieFighter extends TieFighter {
+    constructor(x, y) {
+        super(x, y, "KEYS", 180);
+        this.maxSpeed = 8;
+    }
+}

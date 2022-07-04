@@ -5,6 +5,11 @@ body {
     display: flex;
     justify-content: center
 }
+@font-face{
+	font-family: 'StarJedi';
+	src: url('font/Starjedi.ttf') format('truetype');
+}
+
 #verticalButtons {
     display: flex;
     flex-direction: column;

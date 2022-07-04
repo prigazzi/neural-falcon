@@ -3,24 +3,25 @@
         <meta charset="UTF-8">
         <title>Neural Network with Javascript</title>
         <link rel="stylesheet" href="style.css">
-        <link href="https://allfont.net/allfont.css?fonts=star-jedi" rel="stylesheet" type="text/css" />
+        <link href="http://fonts.cdnfonts.com/css/starwars-kit" rel="stylesheet">
     </head>
     <body>
         <div style="position: relative">
             <canvas class = "space" id="myCanvas"></canvas>
             <div
-            id="welcome"
-            style="
-                align-items: center;
-                background-color: rgba(1, 1, 1, 0.4);
-                color: white;
-                display: flex;
-                font-family: 'Star Jedi', arial;
-                justify-content: center;
-                position: absolute;
-                top: 0; bottom: 0; left: 0; right: 0;
-                ">
-            Press spacebar to start</div>
+                id="welcome"
+                style="
+                    align-items: center;
+                    background-color: rgba(1, 1, 1, 0.4);
+                    color: #FFE81F;
+                    display: flex;
+                    font-family: 'StarJedi', sans-serif;
+                    justify-content: center;
+                    position: absolute;
+                    top: 0; bottom: 0; left: 0; right: 0;
+                    ">
+                <p>Press spacebar to start</p>
+            </div>
         </div>
 
         <script src="utils.js"></script>
@@ -48,6 +49,7 @@
                     if (!playing) {
                         cancelAnimationFrame(animation);
                         welcome.style.display = "flex";
+                        welcome.innerHTML = "Press spacebar to continue";
                     } else {
                         animation = requestAnimationFrame(animate);
                         welcome.style.display = "none";

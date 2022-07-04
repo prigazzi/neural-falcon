@@ -48,6 +48,7 @@ class Road {
     drawLanes(ctx) {
         ctx.lineWidth = 5;
         ctx.strokeStyle = "white";
+        ctx.setLineDash([20, 20]);
 
         for (let i=1; i <= this.laneCount - 1; i++) {
             const x = lerp(
@@ -56,12 +57,12 @@ class Road {
                 i / this.laneCount
             );
 
-            ctx.setLineDash([20, 20]);
-
             ctx.beginPath();
             ctx.moveTo(x, this.top);
             ctx.lineTo(x, this.bottom);
             ctx.stroke();
         }
+
+        ctx.setLineDash([]);
     }
 }

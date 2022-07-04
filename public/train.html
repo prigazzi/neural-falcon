@@ -52,7 +52,7 @@
                 for (let i = 2; i < cars.length; i++) {
                     cars[i].brain = JSON.parse(storedBestBrain);
 
-                    NeuralNetwork.mutate(cars[i].brain, 0.01);
+                    NeuralNetwork.mutate(cars[i].brain, 0.15);
                 }
             }
 
@@ -153,17 +153,17 @@
                     true //params.hitbox != null // drawHitbox
                 );
 
-                if (cars.length < 2000) {
-                    carCtx.globalAlpha = 0.5;
-                    for (let i = 2; i < cars.length; i++) {
-                        cars[i].draw(
-                            carCtx,
-                            false,
-                            false
-                        );
-                    }
-                    carCtx.globalAlpha = 1;
+
+                carCtx.globalAlpha = 0.5;
+                for (let i = 2; i < cars.length; i++) {
+                    cars[i].draw(
+                        carCtx,
+                        false,
+                        false
+                    );
                 }
+                carCtx.globalAlpha = 1;
+
 
                 carCtx.restore();
 

@@ -46,3 +46,7 @@ function getRGBA(value) {
     const B = 0;
     return `rgba(${R}, ${G}, ${B}, ${alpha})`;
 }
+
+function getRandom(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}

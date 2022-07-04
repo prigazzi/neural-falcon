@@ -22,6 +22,10 @@ button {
     background: lightgray
 }
 
+#myCanvas.space {
+    background: #111;
+}
+
 #network {
     background: black
 }

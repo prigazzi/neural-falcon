@@ -4,5 +4,11 @@ class Asteroid extends Car {
 
         super(x, y, 50, 50, "DUMMY", "img/asteroide.png", rotation);
         this.maxSpeed = 5;
+        this.rotationDirection = Math.sign(Math.random() - 0.5);
+    }
+
+    drawImage(ctx) {
+        this.img.rotation += this.rotationDirection;
+        super.drawImage(ctx);
     }
 }

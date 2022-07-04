@@ -30,6 +30,22 @@ class Road {
     }
 
     draw(ctx) {
+        this.drawBorders(ctx);
+        this.drawLanes(ctx);
+    }
+
+    drawBorders(ctx) {
+        ctx.setLineDash([]);
+        ctx.strokeStyle = "yellow";
+        this.borders.forEach(border => {
+            ctx.beginPath();
+            ctx.moveTo(border[0].x, border[0].y);
+            ctx.lineTo(border[1].x, border[1].y);
+            ctx.stroke();
+        });
+    }
+
+    drawLanes(ctx) {
         ctx.lineWidth = 5;
         ctx.strokeStyle = "white";
 
@@ -47,14 +63,5 @@ class Road {
             ctx.lineTo(x, this.bottom);
             ctx.stroke();
         }
-
-        ctx.setLineDash([]);
-        ctx.strokeStyle = "yellow";
-        this.borders.forEach(border => {
-            ctx.beginPath();
-            ctx.moveTo(border[0].x, border[0].y);
-            ctx.lineTo(border[1].x, border[1].y);
-            ctx.stroke();
-        });
     }
 }

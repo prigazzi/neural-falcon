@@ -5,11 +5,12 @@
         <link rel="stylesheet" href="style.css">
     </head>
     <body>
-        <canvas id="myCanvas"></canvas>
+        <canvas class = "space" id="myCanvas"></canvas>
         <script src="utils.js"></script>
         <script src="network.js"></script>
         <script src="sensor.js"></script>
         <script src="road.js"></script>
+        <script src="space.js"></script>
         <script src="controls.js"></script>
         <script src="car.js"></script>
         <script src="mf.js"></script>
@@ -24,10 +25,10 @@
             carCanvas.width = 300;
             const carCtx = carCanvas.getContext('2d');
 
-            const road = new Road(carCanvas.width / 2, carCanvas.width * 0.9);
+            const road = new Space(carCanvas.width / 2, carCanvas.width * 0.9);
             let cars = [
                 params.empire == null ?
-                new MillenniumFalcon(road.getLaneCenter(2), 100) :
+                new MillenniumFalcon(road.getLaneCenter(2), 0) :
                 new GoodTieFighter(road.getLaneCenter(2), 100)
             ];
             cars.push(...generateCars(1));
@@ -79,19 +80,16 @@
                 for (let i = 0; i < cars.length; i++) {
                     const car = cars[i];
                     car.update(road.borders, traffic);
-
-                    if (car.damaged) {
-                        cars.splice(i, 1);
-                    }
                 }
                 bestCar = cars.find(
                     car => car.y == Math.min(...cars.map(car => car.y))
                 );
 
+                road.draw(carCtx, carCanvas.height, -cars[0].y);
+
                 carCtx.save();
                 carCtx.translate(0, -cars[0].y + carCanvas.height * 0.8);
 
-                road.draw(carCtx);
                 for (let i = 0; i < traffic.length; i++) {
                     traffic[i].draw(
                         carCtx,

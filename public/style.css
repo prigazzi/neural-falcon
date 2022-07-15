@@ -1,13 +1,21 @@
+@font-face {
+    font-family: 'Scelet';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Scelet'), url('font/SceletAF.otf') format('opentype');
+}
+
+@font-face{
+	font-family: 'StarJedi';
+	src: url('font/Starjedi.ttf') format('truetype');
+}
+
 body {
     margin: 0;
     background: darkgray;
     overflow: hidden;
     display: flex;
     justify-content: center
-}
-@font-face{
-	font-family: 'StarJedi';
-	src: url('font/Starjedi.ttf') format('truetype');
 }
 
 #verticalButtons {
@@ -24,7 +32,7 @@ button {
 }
 
 #myCanvas {
-    background: lightgray
+    background: lightgray;
 }
 
 #myCanvas.space {
@@ -33,4 +41,45 @@ button {
 
 #network {
     background: black
+}
+
+#overlay {
+    align-items: center;
+    background-color: rgba(1, 1, 1, 0);
+    color: #FFE81F;
+    display: flex;
+    font-family: 'StarJedi', sans-serif;
+    justify-content: center;
+    position: absolute;
+    top: 0; bottom: 0; left: 0; right: 0;
+}
+
+#scores {
+    /* visibility: hidden; */
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+#scores #titles, #scores #values {
+    display: flex;
+}
+
+#scores #values {
+    top: 30px;
+}
+
+#scores #titles > div, #scores #values > div {
+    text-align: center;
+    vertical-align: middle;
+    font-family: Scelet;
+    font-size: 0.7em;
+    color: yellow;
+    width: 34%;
+}
+
+#scores #values > div {
+    color: red;
+    font-size: 1em;
 }
